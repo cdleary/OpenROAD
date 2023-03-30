@@ -17,9 +17,8 @@ target_link_libraries(cts_unittest
     gtest_main
     cts
     utl_lib
-    dbSta
+    dbSta_lib
     OpenSTA
-    gui
     odb
 )
 

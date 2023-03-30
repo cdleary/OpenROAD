@@ -43,6 +43,7 @@
 #include "Util.h"
 #include "db.h"
 #include "utl/Logger.h"
+#include "CtsObserver.h"
 
 namespace stt {
 class SteinerTreeBuilder;
@@ -75,8 +76,12 @@ class CtsOptions
   unsigned getWireSegmentUnit() const { return wireSegmentUnit_; }
   void setPlotSolution(bool plot) { plotSolution_ = plot; }
   bool getPlotSolution() const { return plotSolution_; }
-  void setGuiDebug() { gui_debug_ = true; }
-  bool getGuiDebug() const { return gui_debug_; }
+
+#ifndef SWIG
+  void setObserver(std::unique_ptr<CtsObserver> observer) { observer_ = std::move(observer); }
+  CtsObserver* getObserver() const { return observer_.get(); }
+#endif
+
   void setSinkClustering(bool enable) { sinkClusteringEnable_ = enable; }
   bool getSinkClustering() const { return sinkClusteringEnable_; }
   void setSinkClusteringUseMaxCap(bool useMaxCap)
@@ -194,7 +199,7 @@ class CtsOptions
   bool sinkClusteringUseMaxCap_ = true;
   bool simpleSegmentsEnable_ = false;
   bool vertexBuffersEnable_ = false;
-  bool gui_debug_ = false;
+  std::unique_ptr<CtsObserver> observer_;
   double vertexBufDistance_ = 240;
   double bufDistance_ = 100;
   double clusteringCapacity_ = 0.6;

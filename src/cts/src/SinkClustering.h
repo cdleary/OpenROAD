@@ -95,7 +95,6 @@ class SinkClustering
   void writePlotFile();
   void findBestMatching(unsigned groupSize);
   void writePlotFile(unsigned groupSize);
-  void clusteringVisualizer(const std::vector<Point<double>>& points);
 
   double computeTheta(double x, double y) const;
   unsigned numVertex(unsigned x, unsigned y) const;
