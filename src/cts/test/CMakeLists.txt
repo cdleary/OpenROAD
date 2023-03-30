@@ -15,7 +15,7 @@ target_include_directories(cts_unittest
 target_link_libraries(cts_unittest 
     gtest 
     gtest_main
-    cts
+    cts_lib
     utl_lib
     dbSta_lib
     OpenSTA
