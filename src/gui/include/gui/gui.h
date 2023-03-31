@@ -49,6 +49,7 @@
 #include <variant>
 
 #include "odb/db.h"
+#include "utl/Color.h"
 
 struct Tcl_Interp;
 
@@ -78,28 +79,7 @@ using StringToDBU = std::function<int(const std::string&, bool*)>;
 class Painter
 {
  public:
-  struct Color
-  {
-    constexpr Color() : r(0), g(0), b(0), a(255) {}
-    constexpr Color(int r, int g, int b, int a = 255) : r(r), g(g), b(b), a(a)
-    {
-    }
-    constexpr Color(const Color& color, int a)
-        : r(color.r), g(color.g), b(color.b), a(a)
-    {
-    }
-
-    int r;
-    int g;
-    int b;
-    int a;
-
-    bool operator==(const Color& other) const
-    {
-      return (r == other.r) && (g == other.g) && (b == other.b)
-             && (a == other.a);
-    }
-  };
+  using Color = utl::Color;
 
   static inline const Color black{0x00, 0x00, 0x00, 0xff};
   static inline const Color white{0xff, 0xff, 0xff, 0xff};

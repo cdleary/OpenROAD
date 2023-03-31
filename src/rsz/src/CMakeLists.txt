@@ -43,7 +43,6 @@ swig_lib(NAME      rsz
 
 add_library(rsz_lib
     BufferedNet.cc
-    Resizer.cc
     RepairDesign.cc
     RepairHold.cc
     RepairSetup.cc
@@ -55,6 +54,7 @@ add_library(rsz_lib
 target_sources(rsz
   PRIVATE
     MakeResizer.cc
+    Resizer.cc
 )
 
 target_include_directories(rsz
@@ -73,8 +73,8 @@ target_link_libraries(rsz_lib
     odb
     OpenSTA
     dbSta_lib
-    grt
-    utl
+    grt_lib
+    utl_lib
 )
 
 target_link_libraries(rsz

@@ -45,16 +45,24 @@ swig_lib(NAME      grt
          SCRIPTS   src/GlobalRouter.tcl
 )
 
-target_sources(grt
-  PRIVATE
-    src/GlobalRouter.cpp
+add_library(grt_lib
     src/Grid.cpp
-    src/MakeGlobalRouter.cpp
     src/Net.cpp
     src/Pin.cpp
     src/MakeWireParasitics.cpp
-    src/heatMap.cpp
     src/RepairAntennas.cpp
+)
+
+target_sources(grt
+  PRIVATE
+    src/GlobalRouter.cpp
+    src/MakeGlobalRouter.cpp
+    src/heatMap.cpp
+)
+
+target_include_directories(grt_lib
+  PUBLIC
+    include
 )
 
 target_include_directories(grt
@@ -62,7 +70,20 @@ target_include_directories(grt
     include
 )
 
+target_link_libraries(grt_lib
+    utl_lib
+    FastRoute4.1
+    ant_lib
+    dpl_lib
+    dbSta_lib
+    stt
+    rsz_lib
+    OpenSTA
+    Boost::boost
+)
+
 target_link_libraries(grt
+    grt_lib
     utl
     FastRoute4.1
     ant
