@@ -67,4 +67,4 @@ initResizer(OpenRoad *openroad)
                                openroad->getGlobalRouter());
 }
 
-}
+}  // namespace ord

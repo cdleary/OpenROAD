@@ -81,7 +81,7 @@ target_link_libraries(cts_lib
     dbSta_lib
     OpenSTA
     rsz_lib
-    stt
+    stt_lib
     utl_lib
 )
 
