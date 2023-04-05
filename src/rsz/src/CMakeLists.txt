@@ -69,7 +69,7 @@ target_include_directories(rsz_lib
 
 target_link_libraries(rsz_lib
   PUBLIC
-    stt
+    stt_lib
     odb
     OpenSTA
     dbSta_lib

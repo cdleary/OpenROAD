@@ -36,6 +36,7 @@
 
 %{
 #include "grt/GlobalRouter.h"
+#include "GrouteRenderer.h"
 #include "ord/OpenRoad.hh"
 #include "sta/Liberty.hh"
 
@@ -199,7 +200,16 @@ repair_antennas(odb::dbMTerm* diode_mterm, int iterations, float ratio_margin)
 void
 highlight_net_route(odb::dbNet *net, bool show_pin_locations)
 {
-  getGlobalRouter()->highlightRoute(net, show_pin_locations);
+  if (!gui::Gui::enabled()) {
+    return;
+  }
+
+  GlobalRouter* router = getGlobalRouter();
+  if (router->getRenderer() == nullptr) {
+    router->setRenderer(std::make_unique<GrouteRenderer>(router, router->db()->getTech()));
+  }
+
+  router->getRenderer()->highlightRoute(net, show_pin_locations);
 }
 
 void
@@ -245,7 +255,9 @@ void report_net_wire_length(odb::dbNet* net,
 void
 clear_route_guides()
 {
-  getGlobalRouter()->clearRouteGui();
+  if (auto* renderer = getGlobalRouter()->getRenderer()) {
+    renderer->clearRoute();
+  }
 }
 
 void

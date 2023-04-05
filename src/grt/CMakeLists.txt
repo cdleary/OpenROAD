@@ -51,23 +51,28 @@ add_library(grt_lib
     src/Pin.cpp
     src/MakeWireParasitics.cpp
     src/RepairAntennas.cpp
+    src/GlobalRouter.cpp
 )
 
 target_sources(grt
   PRIVATE
-    src/GlobalRouter.cpp
     src/MakeGlobalRouter.cpp
     src/heatMap.cpp
+    src/GrouteRenderer.cpp
 )
 
 target_include_directories(grt_lib
   PUBLIC
     include
+  PRIVATE
+    src
 )
 
 target_include_directories(grt
   PUBLIC
     include
+  PRIVATE
+    src
 )
 
 target_link_libraries(grt_lib

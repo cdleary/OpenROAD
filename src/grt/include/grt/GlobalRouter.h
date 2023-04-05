@@ -48,10 +48,7 @@
 #include "odb/db.h"
 #include "odb/dbBlockCallBackObj.h"
 #include "sta/Liberty.hh"
-
-namespace gui {
-class Gui;
-}
+#include "AbstractGrouteRenderer.h"
 
 namespace utl {
 class Logger;
@@ -225,11 +222,6 @@ class GlobalRouter
 
   void saveSttInputFile(Net* net);
 
-  // Highlight route in the gui.
-  void highlightRoute(odb::dbNet* net, bool show_pin_locations);
-
-  // Clear routes in the gui
-  void clearRouteGui();
   // Report the wire length on each layer.
   void reportNetLayerWirelengths(odb::dbNet* db_net, std::ofstream& out);
   void reportLayerWireLengths();
@@ -250,6 +242,15 @@ class GlobalRouter
   bool pinAccessPointPositions(
       const Pin& pin,
       std::vector<std::pair<odb::Point, odb::Point>>& ap_positions);
+
+  void setRenderer(std::unique_ptr<AbstractGrouteRenderer> groute_renderer) {
+    groute_renderer_ = std::move(groute_renderer);
+  }
+  AbstractGrouteRenderer* getRenderer() {
+    return groute_renderer_.get();
+  }
+
+  odb::dbDatabase* db() { return db_; }
 
  private:
   // Net functions
@@ -376,7 +377,6 @@ class GlobalRouter
   void initGridAndNets();
 
   utl::Logger* logger_;
-  gui::Gui* gui_;
   stt::SteinerTreeBuilder* stt_builder_;
   ant::AntennaChecker* antenna_checker_;
   dpl::Opendp* opendp_;
@@ -384,7 +384,7 @@ class GlobalRouter
   // Objects variables
   FastRouteCore* fastroute_;
   odb::Point grid_origin_;
-  GrouteRenderer* groute_renderer_;
+  std::unique_ptr<AbstractGrouteRenderer> groute_renderer_ = nullptr;
   NetRouteMap routes_;
 
   std::map<odb::dbNet*, Net*, cmpById> db_net_map_;
