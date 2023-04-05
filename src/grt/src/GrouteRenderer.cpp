@@ -1,5 +1,7 @@
 #include "GrouteRenderer.h"
 
+#include "Net.h"
+
 namespace grt {
 
 GrouteRenderer::GrouteRenderer(GlobalRouter* groute, odb::dbTech* tech)

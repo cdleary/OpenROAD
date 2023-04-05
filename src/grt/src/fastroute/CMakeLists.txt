@@ -36,6 +36,7 @@
 
 add_library(FastRoute4.1
   src/FastRoute.cpp
+  src/FastRouteRenderer.cpp
   src/RSMT.cpp
   src/RipUp.cpp
   src/maze.cpp

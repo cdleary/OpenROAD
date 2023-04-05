@@ -37,6 +37,7 @@
 %{
 #include "grt/GlobalRouter.h"
 #include "GrouteRenderer.h"
+#include "FastRouteRenderer.h"
 #include "ord/OpenRoad.hh"
 #include "sta/Liberty.hh"
 
@@ -224,7 +225,18 @@ void set_global_route_debug_cmd(const odb::dbNet *net,
                                 bool tree2D,
                                 bool tree3D)
 {
-  getGlobalRouter()->initDebugFastRoute();
+  if (!gui::Gui::enabled()) {
+    return;
+  }
+
+  GlobalRouter* global_router = getGlobalRouter();
+  if (global_router->getDebugFastRoute() == nullptr) {
+    FastRouteCore* fast_route_core = global_router->fastroute();
+    global_router->initDebugFastRoute(std::make_unique<FastRouteRenderer>(
+      global_router->db()->getTech(),
+      fast_route_core->getTileSize(),
+      fast_route_core->x_corner(), fast_route_core->y_corner()));
+  }
   getGlobalRouter()->setDebugNet(net);
   getGlobalRouter()->setDebugSteinerTree(steinerTree);
   getGlobalRouter()->setDebugRectilinearSTree(rectilinearSTree);

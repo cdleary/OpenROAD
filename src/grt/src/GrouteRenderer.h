@@ -1,5 +1,9 @@
 #pragma once
 
+#include "gui/gui.h"
+#include "AbstractGrouteRenderer.h"
+#include "grt/GlobalRouter.h"
+
 namespace grt {
 
 class GrouteRenderer : public gui::Renderer, public AbstractGrouteRenderer
@@ -9,7 +13,7 @@ class GrouteRenderer : public gui::Renderer, public AbstractGrouteRenderer
 
   void highlightRoute(odb::dbNet* net, bool show_pin_locations) override;
 
-  void clearRoute();
+  void clearRoute() override;
 
   void drawLayer(odb::dbTechLayer* layer,
                  gui::Painter& painter) override;

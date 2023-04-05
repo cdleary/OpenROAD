@@ -70,6 +70,8 @@
 #include "stt/SteinerTreeBuilder.h"
 #include "utl/Logger.h"
 #include "utl/algorithms.h"
+#include "AbstractGrouteRenderer.h"
+#include "AbstractFastRouteRenderer.h"
 
 namespace grt {
 
@@ -78,7 +80,6 @@ using utl::GRT;
 
 GlobalRouter::GlobalRouter()
     : logger_(nullptr),
-      gui_(nullptr),
       stt_builder_(nullptr),
       antenna_checker_(nullptr),
       opendp_(nullptr),
@@ -120,14 +121,12 @@ void GlobalRouter::init(utl::Logger* logger,
                         dpl::Opendp* opendp)
 {
   logger_ = logger;
-  // Broken gui api missing openroad accessor.
-  gui_ = gui::Gui::get();
   stt_builder_ = stt_builder;
   db_ = db;
   stt_builder_ = stt_builder;
   antenna_checker_ = antenna_checker;
   opendp_ = opendp;
-  fastroute_ = new FastRouteCore(db_, logger_, stt_builder_, gui_);
+  fastroute_ = new FastRouteCore(db_, logger_, stt_builder_);
   sta_ = sta;
   resizer_ = resizer;
 
@@ -3748,9 +3747,12 @@ void GlobalRouter::createWLReportFile(const char* file_name, bool verbose)
   out << "\n";
 }
 
-void GlobalRouter::initDebugFastRoute()
+void GlobalRouter::initDebugFastRoute(std::unique_ptr<AbstractFastRouteRenderer> renderer)
 {
-  fastroute_->setDebugOn(true);
+  fastroute_->setDebugOn(std::move(renderer));
+}
+AbstractFastRouteRenderer* GlobalRouter::getDebugFastRoute() const {
+  return fastroute_->fastrouteRender();
 }
 void GlobalRouter::setDebugSteinerTree(bool steinerTree)
 {
@@ -3828,6 +3830,13 @@ IncrementalGRoute::~IncrementalGRoute()
   // don't bother updating it.
   // groute_->updateDbCongestion();
   db_cbk_.removeOwner();
+}
+
+void GlobalRouter::setRenderer(std::unique_ptr<AbstractGrouteRenderer> groute_renderer) {
+  groute_renderer_ = std::move(groute_renderer);
+}
+AbstractGrouteRenderer* GlobalRouter::getRenderer() {
+  return groute_renderer_.get();
 }
 
 void GlobalRouter::addDirtyNet(odb::dbNet* net)

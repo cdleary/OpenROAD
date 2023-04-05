@@ -48,7 +48,6 @@
 #include "odb/db.h"
 #include "odb/dbBlockCallBackObj.h"
 #include "sta/Liberty.hh"
-#include "AbstractGrouteRenderer.h"
 
 namespace utl {
 class Logger;
@@ -94,7 +93,8 @@ class Netlist;
 class RoutingTracks;
 class SteinerTree;
 class RoutePt;
-class GrouteRenderer;
+class AbstractGrouteRenderer;
+class AbstractFastRouteRenderer;
 class GlobalRouter;
 class RoutingCongestionDataSource;
 
@@ -212,7 +212,11 @@ class GlobalRouter
   void setPerturbationAmount(int perturbation);
   void perturbCapacities();
 
-  void initDebugFastRoute();
+#ifndef SWIG
+  void initDebugFastRoute(std::unique_ptr<AbstractFastRouteRenderer> renderer);
+  AbstractFastRouteRenderer* getDebugFastRoute() const;
+#endif
+
   void setDebugNet(const odb::dbNet* net);
   void setDebugSteinerTree(bool steinerTree);
   void setDebugRectilinearSTree(bool rectilinearSTree);
@@ -243,14 +247,13 @@ class GlobalRouter
       const Pin& pin,
       std::vector<std::pair<odb::Point, odb::Point>>& ap_positions);
 
-  void setRenderer(std::unique_ptr<AbstractGrouteRenderer> groute_renderer) {
-    groute_renderer_ = std::move(groute_renderer);
-  }
-  AbstractGrouteRenderer* getRenderer() {
-    return groute_renderer_.get();
-  }
+#ifndef SWIG
+  void setRenderer(std::unique_ptr<AbstractGrouteRenderer> groute_renderer);
+  AbstractGrouteRenderer* getRenderer();
+#endif
 
   odb::dbDatabase* db() { return db_; }
+  FastRouteCore* fastroute() const { return fastroute_; }
 
  private:
   // Net functions
@@ -384,7 +387,7 @@ class GlobalRouter
   // Objects variables
   FastRouteCore* fastroute_;
   odb::Point grid_origin_;
-  std::unique_ptr<AbstractGrouteRenderer> groute_renderer_ = nullptr;
+  std::unique_ptr<AbstractGrouteRenderer> groute_renderer_;
   NetRouteMap routes_;
 
   std::map<odb::dbNet*, Net*, cmpById> db_net_map_;
