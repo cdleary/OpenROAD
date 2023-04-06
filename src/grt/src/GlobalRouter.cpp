@@ -118,7 +118,8 @@ void GlobalRouter::init(utl::Logger* logger,
                         sta::dbSta* sta,
                         rsz::Resizer* resizer,
                         ant::AntennaChecker* antenna_checker,
-                        dpl::Opendp* opendp)
+                        dpl::Opendp* opendp,
+                        std::unique_ptr<AbstractRoutingCongestionDataSource> routing_congestion_data_source)
 {
   logger_ = logger;
   stt_builder_ = stt_builder;
@@ -130,7 +131,7 @@ void GlobalRouter::init(utl::Logger* logger,
   sta_ = sta;
   resizer_ = resizer;
 
-  heatmap_ = std::make_unique<RoutingCongestionDataSource>(logger_, db_);
+  heatmap_ = std::move(routing_congestion_data_source);
   heatmap_->registerHeatMap();
 }
 

@@ -96,7 +96,7 @@ class RoutePt;
 class AbstractGrouteRenderer;
 class AbstractFastRouteRenderer;
 class GlobalRouter;
-class RoutingCongestionDataSource;
+class AbstractRoutingCongestionDataSource;
 
 struct RegionAdjustment
 {
@@ -145,7 +145,8 @@ class GlobalRouter
             sta::dbSta* sta,
             rsz::Resizer* resizer,
             ant::AntennaChecker* antenna_checker,
-            dpl::Opendp* opendp);
+            dpl::Opendp* opendp,
+            std::unique_ptr<AbstractRoutingCongestionDataSource> routing_congestion_data_source);
   void clear();
 
   void setAdjustment(const float adjustment);
@@ -434,7 +435,7 @@ class GlobalRouter
   std::set<odb::dbNet*> dirty_nets_;
 
   RepairAntennas* repair_antennas_;
-  std::unique_ptr<RoutingCongestionDataSource> heatmap_;
+  std::unique_ptr<AbstractRoutingCongestionDataSource> heatmap_;
 
   // variables congestion report file
   const char* congestion_file_name_;

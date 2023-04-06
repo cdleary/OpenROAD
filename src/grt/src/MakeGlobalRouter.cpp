@@ -39,6 +39,7 @@
 #include "grt/GlobalRouter.h"
 #include "ord/OpenRoad.hh"
 #include "sta/StaMain.hh"
+#include "heatMap.h"
 
 namespace sta {
 // Tcl files encoded into strings.
@@ -73,7 +74,8 @@ void initGlobalRouter(OpenRoad* openroad)
                                     openroad->getSta(),
                                     openroad->getResizer(),
                                     openroad->getAntennaChecker(),
-                                    openroad->getOpendp());
+                                    openroad->getOpendp(),
+				    std::make_unique<grt::RoutingCongestionDataSource>(openroad->getLogger(), openroad->getDb()));
 }
 
 }  // namespace ord
